@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127 128" width="127" height="128">
+  <rect width="127" height="128" fill="rgb(247,247,247)" />
+  <path d="M 65.2 103.9 C 126.2 74.1 102.8 46.2 79.6 24.3" stroke="rgb(26,27,27)" stroke-width="10.05" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 90.7 43.5 C 109.9 74.3 104.6 59.4 100.6 61.5" stroke="rgb(31,30,27)" stroke-width="10.26" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 57.8 98.2 C 76.6 111.2 42.3 101.0 41.7 97.3" stroke="rgb(42,95,98)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 39.6 112.0 C 70.3 101.9 31.0 98.9 76.2 126.2" stroke="rgb(42,94,98)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 77.7 36.9 C 45.6 26.4 46.6 61.5 70.4 13.2" stroke="rgb(157,133,118)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 59.4 45.9 C 75.1 87.5 58.6 77.3 49.3 70.1" stroke="rgb(169,130,114)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 97.1 62.8 C 21.1 26.4 -0.2 93.5 22.7 36.7" stroke="rgb(40,45,47)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 21.1 66.7 C 33.3 21.9 49.2 8.2 30.0 39.0" stroke="rgb(39,45,47)" stroke-width="9.83" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 74.3 56.3 C 62.7 27.2 63.8 33.4 57.7 92.8" stroke="rgb(210,179,174)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 82.8 80.2 C 67.6 33.0 71.7 25.0 70.8 69.0" stroke="rgb(210,181,163)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 23.3 53.2 C 72.4 20.1 39.0 42.3 56.1 100.3" stroke="rgb(110,79,68)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 55.6 73.3 C 56.9 18.1 53.2 59.5 58.4 0.0" stroke="rgb(105,79,69)" stroke-width="9.81" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 125.4 56.2 C 124.1 42.5 117.8 28.8 107.9 19.2" stroke="rgb(194,193,189)" stroke-width="1.90" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 108.1 18.8 C 109.4 17.2 110.4 16.2 111.9 15.2" stroke="rgb(253,253,253)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 111.8 15.2 C 109.4 16.3 107.9 16.8 106.4 17.3" stroke="rgb(236,236,235)" stroke-width="1.72" fill="none" opacity="0.94" stroke-linecap="round" />
+  <path d="M 106.7 17.9 C 83.1 -5.6 41.5 -5.5 19.3 18.9" stroke="rgb(184,185,186)" stroke-width="1.90" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 19.5 18.1 C 17.9 16.9 16.6 15.8 14.7 15.2" stroke="rgb(241,242,242)" stroke-width="1.72" fill="none" opacity="0.93" stroke-linecap="round" />
+  <path d="M 14.8 15.1 C 16.2 16.5 17.3 17.6 18.2 19.4" stroke="rgb(241,241,241)" stroke-width="1.72" fill="none" opacity="0.93" stroke-linecap="round" />
+  <path d="M 19.0 19.6 C -20.1 53.3 5.8 127.7 59.8 125.9" stroke="rgb(200,205,207)" stroke-width="1.90" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 61.4 18.5 C 59.1 19.4 56.3 20.5 54.0 21.7" stroke="rgb(146,103,83)" stroke-width="1.90" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 54.5 21.8 C 50.9 35.9 50.6 36.3 52.7 41.4" stroke="rgb(151,113,93)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 52.3 41.4 C 54.6 42.2 56.6 42.5 58.9 42.6" stroke="rgb(155,115,76)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 58.5 43.1 C 57.0 58.1 57.1 57.5 59.8 62.9" stroke="rgb(156,109,100)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 59.7 62.9 C 61.4 63.0 62.4 63.3 63.1 64.2" stroke="rgb(168,125,121)" stroke-width="1.87" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 62.8 64.4 C 61.8 63.3 59.8 62.8 58.3 62.5" stroke="rgb(159,120,113)" stroke-width="1.74" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 58.5 61.6 C 58.3 63.7 57.8 65.0 56.8 66.2" stroke="rgb(135,101,94)" stroke-width="1.89" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 56.2 65.9 C 57.8 66.2 59.2 66.6 61.1 66.8" stroke="rgb(153,124,129)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 61.2 66.9 C 59.0 67.3 56.8 67.8 55.2 69.0" stroke="rgb(170,129,134)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 56.0 68.1 C 57.3 69.5 58.3 71.2 59.6 72.5" stroke="rgb(162,126,119)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 58.7 72.6 C 57.7 73.6 56.5 74.7 54.6 74.5" stroke="rgb(170,127,125)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 54.1 75.0 C 54.0 76.1 54.1 77.4 54.4 78.3" stroke="rgb(162,136,121)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+  <path d="M 54.5 78.0 C 57.3 78.8 60.3 80.7 64.1 81.3" stroke="rgb(154,137,112)" stroke-width="1.72" fill="none" opacity="0.96" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,158 @@
+==============================================================================
+ SVG AI VECTORIZE — HOW IT ALL WORKS
+ Raster image  ->  faithful, infinitely-scalable SVG (with editable layers)
+==============================================================================
+
+WHAT IT DOES
+------------
+You upload a PNG / JPG / WEBP. You get back an SVG: a vector image made of
+mathematical paths instead of pixels. It stays razor-sharp at ANY size — a
+business card or a billboard — and (optionally) opens in Figma / Illustrator /
+Inkscape as named, editable layers with the background removed.
+
+Best on logos, icons, flat/line art, and clean illustrations. Photographs and
+smooth gradients are the hard case (see LIMITS).
+
+It is a CONTOUR TRACER (the VTracer engine), not an AI image generator and not
+the old gradient-descent renderer. It reproduces what you give it; it does not
+invent detail.
+
+
+THE PIPELINE (what happens on each conversion)
+----------------------------------------------
+1. NORMALIZE  (server.py:_normalize_to_png)
+   Any format / odd extension / alpha -> a clean RGB PNG. Transparent pixels are
+   flattened onto white so the tracer has a consistent background.
+
+2. ANALYZE  (vectorize.py:analyze_image)
+   A 160px thumbnail is inspected to classify the image and pick settings:
+     - n_colors : distinct colours, counted coarsely so JPEG/AA noise doesn't
+                  inflate it.
+     - edge     : edge density (how "liney" it is).
+   Classification -> preset:
+     line_art  (high edge density + few colours)  -> 'max'      preset
+     flat_logo (very few colours)                 -> 'logo'     preset
+     artwork   (everything else)                  -> 'balanced' preset
+
+3. PREPARE  (vectorize.py:prepare_for_trace)
+   Small/low-res images are upscaled with LANCZOS first. The tracer hugs the
+   antialiased pixel boundary, so upscaling gives smoother curves and HIGHER
+   fidelity (measured: L1 0.0045 -> 0.0031 on a 736px logo). Adaptive: tiny
+   images get up to 3x, images already large are left alone.
+
+4. TRACE  (vtracer)
+   VTracer walks colour regions and fits paths. Tuned presets balance fidelity
+   vs file size:
+     PRESET     mode      notes
+     max        spline    smoothest curves, biggest file (max fidelity)
+     balanced   polygon   default; ~same fidelity as spline at ~3x smaller file
+     small      polygon   higher layer_difference -> smallest file
+     logo       polygon   tiny + faithful for flat logos
+   Key params: color_precision, filter_speckle, layer_difference, path_precision.
+
+5. (OPTIONAL) LAYER  (vectorize_layered.py)  -- the differentiator, see below.
+
+6. MEASURE FIDELITY  (vectorize.py:measure_fidelity)
+   The SVG is rendered back to pixels (resvg) and compared to the original with
+   an L1 difference, measured on the FOREGROUND only (subject, not background) at
+   the native aspect ratio. Reported as "fidelity %" = (1 - L1) * 100.
+
+
+THE LAYERING SYSTEM  (the unique part)
+--------------------------------------
+A plain tracer dumps hundreds of flat <path>s with no structure. We GROUP them
+into named <g> layers tagged for editors:
+    <g id="red" inkscape:groupmode="layer" inkscape:label="red"> ... </g>
+so they show up named and toggleable in Figma / Illustrator / Inkscape, and the
+background can be hidden (the output ships on transparency).
+
+Two layering shapes are produced and ONE is chosen per image, by measurement:
+
+  A) COLOUR LAYERS — one layer per colour (red, blue, ...). Editable: "recolour
+     all the red", "hide the yellow". Built by k-means over the actual path fill
+     colours (capped at 8), then MERGING perceptually-close clusters so a tracer's
+     antialiased-edge shades don't become frayed junk layers.
+
+  B) FOREGROUND / BACKGROUND — just subject vs removable background, with the
+     subject left in its exact original paint order.
+
+WHY NOT ALWAYS COLOUR LAYERS?  Grouping paths by colour REORDERS them. On flat
+art (colours don't overlap) that changes nothing. On dense/overlapping art it
+wrecks the stacking — e.g. dark feathers end up painted over a light eye, and the
+eye disappears. So we DON'T guess by image type; we MEASURE:
+
+  THE GATE (vectorize_layered.py)
+    - Render the colour-regrouped version AND the faithful original-order version.
+    - Diff the two renders:  changed = mean(|A-B|),  badfrac = fraction of pixels
+      that flipped hard (>0.4).
+    - Keep COLOUR layers only if  changed < 0.008 AND badfrac < 0.008  (and there
+      are >=2 colours). Otherwise fall back to FOREGROUND/BACKGROUND.
+
+  Measured break point across the sample set:
+    colour layers : knot (0.000), eagle-on-star (0.0009), goldface (0.005),
+                    swirl (0.007)
+    fg/bg (kept faithful) : phoenix (0.011), dove (0.04), lion (0.08),
+                    lionhead (0.10), colourful eagle sticker (0.16)
+
+  This is the key honesty of the tool: it never ships a broken-but-layered file.
+  If colour-splitting would damage the picture, you get a faithful 2-layer result
+  instead.
+
+BACKGROUND REMOVAL (vectorize_layered.py:is_background) — two cases:
+  - Opaque image (incl. PNGs flagged alpha but fully opaque, e.g. a logo on solid
+    white): background = corner colour AND the shape touches the border. This
+    keeps interior same-coloured shapes (letter counters, the knot's weave) and
+    removes only the outer frame.
+  - Genuinely transparent image: the transparent region is the background.
+      * If the opaque subject contains near-WHITE pixels (e.g. an eagle's white
+        head), we flatten transparency to a MAGENTA SENTINEL colour and drop
+        exactly that — so a white subject is never mistaken for white background.
+      * Otherwise we white-flatten, so transparent interior GAPS render correctly
+        on top (e.g. an OpenAI-style knot's weave gaps), instead of dropping them
+        and baring a solid silhouette.
+  - Safety net: if removal would delete EVERYTHING (a solid/full-bleed image),
+    nothing is removed — the whole image is kept as foreground.
+
+
+THE SERVER  (server.py — FastAPI)
+---------------------------------
+  GET  /                 -> serves the UI (pitch/index.html)
+  POST /api/vectorize     -> multipart {file, quality, layered} -> JSON:
+        { svg, sizeKb, paths, preset, fidelity, layers[], kind, n_colors }
+
+  Notes:
+   - The endpoint is a SYNC def on purpose: vtracer/PIL/resvg are blocking, so
+     FastAPI runs it in a worker thread and concurrent uploads don't freeze the
+     event loop. (For true multi-core parallelism run uvicorn with --workers N.)
+   - Each request uses a private temp dir that is always cleaned up.
+   - Limits: uploads over 25 MB -> 413; images over ~25 megapixels -> 413
+     (decompression-bomb guard); unreadable files -> 400.
+   - Binds 127.0.0.1 by default (local pitch use). Set HOST=0.0.0.0 to expose it on
+     the LAN (e.g. demo from a phone) and PORT to change the port.
+
+
+THE UI  (pitch/index.html — single file, no build step)
+-------------------------------------------------------
+   Dark theme + lime accent. Dropzone (drag or click), quality pills (Auto / Max /
+   Balanced / Smallest), a "Keep editable layers" toggle, a live SVG preview on a
+   transparency checkerboard, file-size + fidelity stats, a clickable Layers panel
+   that shows/hides each <g>, a download button, and a zoom demo (pixels-vs-vector).
+   It talks to /api/vectorize and renders the returned SVG inline.
+
+
+LIMITS (be honest about these)
+------------------------------
+ - GRADIENTS: a contour tracer approximates a smooth gradient with flat colour
+   bands -> a metallic-gold logo looks chunky. Recovering it needs ~10x the file
+   size and still isn't perfect. Flat/solid art is where this shines.
+ - DENSE / PAINTERLY ART: gets faithful foreground/background only, not per-colour
+   layers (splitting by colour would visibly break it — see THE GATE).
+ - LAYER NAMES are approximate (nearest colour word). Antialiasing-averaged dark
+   tones can label "brown"; rename in your editor. The pixels are correct.
+ - PHOTOS produce large SVGs with many paths. That's inherent to faithful tracing
+   of continuous-tone images, not a bug.
+
+==============================================================================
+ Files:  vectorize.py (engine + presets + fidelity) · vectorize_layered.py
+ (layering + background removal) · server.py (API) · pitch/index.html (UI)
+==============================================================================

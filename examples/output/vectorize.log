@@ -1,0 +1,52 @@
+nohup: ignoring input
+=================================================================
+  CurveSplat v2 — Improved GPU Multi-Curve Optimization
+=================================================================
+  Target Image:  phoenix_black.png
+  Device:        CUDA
+  GPU:           NVIDIA RTX A6000
+  Steps:         500
+  Fill curves:   75  |  Edge curves: 75
+  Peak LR:       0.03
+  Bezier samps:  16
+  Prompt:        phoenix bird with fire wings
+  AMP Enabled:   True
+  Adaptive:      True
+=================================================================
+✓ Resized to 512×512
+✓ Running k-means color clustering for region fill curves...
+  [CLIP Init] Scoring 144 candidate curves against prompt: 'phoenix bird with fire wings'
+It looks like you are trying to rescale already rescaled images. If the input images have pixel values between 0 and 1, set `do_rescale=False` to avoid rescaling them again.
+  [CLIP Init] Done. Kept top 75 curves with highest CLIP similarity.
+  → Created 75 region fill curves
+✓ Running SDF contour extraction for edge curves...
+  → Extracted 75 edge contour curves
+✓ Scene ready: 150 total curves on CUDA
+
+Phase        Step        Loss        L1       FPS
+--------------------------------------------------
+  Coarse       1     0.25137   0.25137       0.3  (Fwd: 1128.7ms, Bwd: 2560.6ms, Opt: 49.2ms)
+  Coarse      50     0.15947   0.15947       0.3  (Fwd: 1202.6ms, Bwd: 2681.5ms, Opt: 7.3ms)
+  [GPU Mem] Step 100: 23.5 MB
+  Coarse     100     0.12118   0.12118       0.3  (Fwd: 1227.2ms, Bwd: 2724.8ms, Opt: 7.3ms)
+  [Adaptive Curves] Spawned 10 new curves in high-error zones, removed 10 weak ones. Optimizer reset.
+  Mid        150     0.10670   0.10670       0.3  (Fwd: 1247.0ms, Bwd: 2723.2ms, Opt: 7.4ms)
+  [GPU Mem] Step 200: 26.8 MB
+  Mid        200     0.10102   0.10102       0.3  (Fwd: 1107.4ms, Bwd: 2883.6ms, Opt: 7.5ms)
+  [Adaptive Curves] Spawned 10 new curves in high-error zones, removed 10 weak ones. Optimizer reset.
+  Mid        250     0.09878   0.09878       0.2  (Fwd: 1535.3ms, Bwd: 4228.4ms, Opt: 9.6ms)
+  [GPU Mem] Step 300: 29.5 MB
+  Fine       300     0.25355   0.10429       0.2  (Fwd: 1559.0ms, Bwd: 3626.1ms, Opt: 8.0ms)
+  [Adaptive Curves] Spawned 10 new curves in high-error zones, removed 10 weak ones. Optimizer reset.
+  Fine       350     0.23892   0.09755       0.2  (Fwd: 1194.6ms, Bwd: 3052.0ms, Opt: 8.3ms)
+  [GPU Mem] Step 400: 29.5 MB
+  Fine       400     0.23725   0.09750       0.2  (Fwd: 1233.9ms, Bwd: 3084.9ms, Opt: 8.1ms)
+  [Adaptive Curves] Spawned 10 new curves in high-error zones, removed 10 weak ones. Optimizer reset.
+  Fine       450     0.23042   0.09470       0.2  (Fwd: 1254.9ms, Bwd: 2923.3ms, Opt: 7.7ms)
+  [GPU Mem] Step 500: 29.6 MB
+  Fine       500     0.23373   0.09748       0.2  (Fwd: 1258.8ms, Bwd: 2932.0ms, Opt: 7.6ms)
+
+✓ Optimization complete in 2924.3s (5.85s/step)
+✓ Comparison: examples/output/cuda_vectorization_comparison.png
+✓ SVG export: examples/output/optimized_artwork.svg
+=================================================================

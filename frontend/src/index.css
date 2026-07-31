@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  /* Industrial Vector Brutalism Palette */
+  --color-bg-navy: #FFFFFF; /* Retaining var name to minimize refactor, but it's pure white now */
+  --color-bg-canvas: transparent;
+  --color-surface-slate: #FFFFFF;
+  --color-border-grid: #000000; /* 1px solid black everywhere */
+  --color-text-primary: #000000;
+  --color-text-secondary: #000000;
+  --color-text-muted: #666666;
+  
+  /* Accents */
+  --color-accent-cyan: #FF00FF; /* Pure Magenta */
+  --color-accent-violet: #0000FF; /* Pure Blue */
+  --color-accent-gradient: #FF00FF;
+  --color-error: #FF0000;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Layout / Grid */
+  --grid-size: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg-navy);
+  background-image: 
+    linear-gradient(to right, #E5E5E5 1px, transparent 1px),
+    linear-gradient(to bottom, #E5E5E5 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow: hidden; /* Split screen handles its own scrolling */
+}
+
+/* Base Typographic Styles */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--color-accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Shared Utilities */
+.hairline-border {
+  border: 1px solid var(--color-border-grid);
+}
+
+.hairline-border-bottom {
+  border-bottom: 1px solid var(--color-border-grid);
+}
+
+.hairline-border-right {
+  border-right: 1px solid var(--color-border-grid);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-navy); 
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-grid); 
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted); 
+}
