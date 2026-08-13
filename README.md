@@ -1,5 +1,6 @@
-# SVG AI Vectorize
+# OptiVector
 
+OptiVector is a fast and accurate tool that converts standard images into infinitely scalable SVGs. It features intelligent layer grouping and automatic background removal to give you perfectly crisp, print-ready graphics.
 ## The Problem I Was Solving
 Designers and developers frequently need to convert raster images (PNG, JPG, WEBP) into clean, infinitely-scalable SVGs for printing or web use. Existing automated tools either produce massive files, lose important details, or fail to cleanly separate colors into editable layers. Generative AI tools often "hallucinate" incorrect details instead of faithfully reproducing the original logo or artwork. This project was built to provide a fast, accurate, and faithful raster-to-vector conversion tool that outputs highly optimized, editable SVGs.
 
