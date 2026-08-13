@@ -1,0 +1,30 @@
+# How to Run - SVG AI Vectorize
+
+## 1. Prerequisites
+You need Python 3 installed on your system.
+
+## 2. Install Dependencies
+Open your terminal (Command Prompt/PowerShell) and run the following command to install the required Python packages:
+
+    python3 -m pip install fastapi uvicorn python-multipart vtracer resvg-py pillow numpy scipy
+
+## 3. Run the Web Application
+Start the FastAPI server by running the following command from the root directory of this project:
+
+    python3 server.py
+
+Once the server is running, open your web browser and navigate to:
+http://localhost:8000
+
+You can drag and drop images directly into the UI to vectorize them.
+
+## 4. Using the Command Line (CLI)
+If you prefer not to use the web server, you can run the scripts directly from the command line:
+
+- Plain vectorize (auto-detects logo vs artwork):
+  python3 vectorize.py logo.png
+
+- With editable, named layers + background removal:
+  python3 vectorize_layered.py logo.png
+
+Quality presets can be passed with `-q` (e.g., auto, max, balanced, small, logo).

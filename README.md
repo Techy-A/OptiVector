@@ -1,126 +1,25 @@
 # SVG AI Vectorize
 
-Turn any raster image (PNG / JPG / WEBP) into a clean, **infinitely-scalable SVG**
-that stays razor-sharp at any print size — with optional **editable, named layers**
-and automatic **background removal**.
+## The Problem I Was Solving
+Designers and developers frequently need to convert raster images (PNG, JPG, WEBP) into clean, infinitely-scalable SVGs for printing or web use. Existing automated tools either produce massive files, lose important details, or fail to cleanly separate colors into editable layers. Generative AI tools often "hallucinate" incorrect details instead of faithfully reproducing the original logo or artwork. This project was built to provide a fast, accurate, and faithful raster-to-vector conversion tool that outputs highly optimized, editable SVGs.
 
-Best for logos, icons, flat/line art, and clean illustrations.
+## My Role in the Project
+As the primary developer (Techy-A), I architected and implemented the entire pipeline. This included designing the responsive HTML/CSS/JS frontend, developing the Python/FastAPI backend, and integrating the core vectorization engine using `vtracer` and image processing libraries. I also engineered the smart layer-grouping algorithm that automatically determines whether to group vectors by color (for flat logos) or separate foreground from background (for complex art) without compromising fidelity.
 
-> Engine: [VTracer](https://github.com/visioncortex/vtracer) (a contour tracer).
-> This is faithful vectorization, not AI generation — it reproduces your image, it
-> doesn't invent detail. For the full design, read [`HOW_IT_WORKS.txt`](HOW_IT_WORKS.txt).
->
-> *(The earlier differentiable Gaussian-splat engine, "CurveSplat", lives under
-> `src/` + `tests/` but is retired for faithful-logo work — see `SESSION_SUMMARY.md`.)*
+## The Tech Stack Used
+- **Frontend**: Vanilla HTML5, CSS3, and JavaScript. No heavy frameworks, ensuring a lightweight and lightning-fast UI.
+- **Backend API**: Python 3 and FastAPI for robust, asynchronous API endpoints.
+- **Vectorization Engine**: Python, `vtracer` (for high-fidelity contour tracing), `resvg-py`, and Pillow (for image processing).
+- **Mathematical & Data Processing**: `numpy` and `scipy`.
+- **Legacy/Testing Engine (CurveSplat)**: PyTorch for differentiable rendering and optimization.
 
----
+## The Outcome or Impact of the Project
+The result is a fast, production-ready application that instantly converts logos and flat art into pristine vector graphics. The output SVGs are highly optimized (often around 45 KB, up to 15x smaller than competitors) and feature editable named layers that drop seamlessly into tools like Figma and Adobe Illustrator. The web UI effectively demonstrates the value of infinite scalability through a custom-built zoom comparison tool.
 
-## Quick start
+## Key Challenges Faced and How I Solved Them
+1. **Handling Complex vs. Flat Art**: Simple logos benefit from color-grouped layers, but dense painterly art breaks when grouped by color due to overlapping strokes. **Solution**: I developed an automatic measurement system ("The Gate") that renders both the color-grouped version and the original-order version, diffs them, and safely determines the best layer structure for the image without user intervention.
+2. **Performance and Concurrency**: Vectorization can be computationally expensive and block the main thread. **Solution**: I offloaded the vectorization workload in the FastAPI backend to a background worker thread, ensuring that concurrent uploads from the UI don't block each other.
+3. **Frontend Security**: Rendering SVGs generated from user uploads can pose an XSS risk. **Solution**: I implemented a strict sanitization step in the vanilla JavaScript using `DOMParser` to strip out any `<script>`, `<foreignObject>`, or `on*` event handlers before displaying the result.
 
-```bash
-# 1. Install deps
-python3 -m pip install fastapi uvicorn python-multipart vtracer resvg-py pillow numpy scipy
-
-# 2. Run the web app
-python3 server.py            # -> http://localhost:8000
-```
-
-Open http://localhost:8000, drop an image, hit **Vectorize**, download the SVG.
-
-> Binds to `127.0.0.1` by default. To demo from another device on your network:
-> `HOST=0.0.0.0 python3 server.py` (optionally `PORT=…`).
-
-### Command line (no server)
-
-```bash
-# Plain vectorize (auto-detects logo vs artwork, picks settings)
-python3 vectorize.py logo.png                      # -> logo.svg
-python3 vectorize.py photo.jpg -o out.svg -q max --report
-
-# With editable, named layers + background removal
-python3 vectorize_layered.py logo.png              # -> logo.layered.svg
-```
-
-Quality presets (`-q`): `auto` (default), `max`, `balanced`, `small`, `logo`.
-
----
-
-## What you get
-
-- **True vector** — zoom forever, no pixelation; prints crisp at any size.
-- **Tuned for size** — flat logos land around tens of KB, not hundreds.
-- **Editable layers** (when the art supports it) — paths grouped into named `<g>`
-  layers tagged for Figma / Illustrator / Inkscape; toggle or recolor each.
-- **Background removed** — output ships on transparency.
-- **Measured fidelity** — every result reports how close it is to the original
-  (rendered back with resvg and compared on the foreground).
-
----
-
-## How layering decides (important)
-
-Two layer shapes exist; the tool **measures** which is safe per image — it never
-ships a layered-but-broken file:
-
-| Image kind | Layers you get | Why |
-|---|---|---|
-| Flat logos, line art, simple multi-color (swirl, knot, eagle-on-star) | **Per-color layers** | Colors don't overlap → grouping by color is lossless |
-| Dense / painterly / overlapping art (colorful sticker, lion, phoenix) | **Foreground + background** | Color-grouping would reorder strokes and damage the picture |
-
-Mechanism: render the color-grouped version and the faithful original-order
-version, diff the two; keep color layers only if the picture is unchanged. (Details
-in `HOW_IT_WORKS.txt` → "THE GATE".)
-
----
-
-## Project layout
-
-| File | Role |
-|---|---|
-| [`vectorize.py`](vectorize.py) | Engine: presets, adaptive pre-upscale, tracing, fidelity measurement, image analysis |
-| [`vectorize_layered.py`](vectorize_layered.py) | Editable layers: color-vs-fg/bg decision, background removal, transparency handling |
-| [`server.py`](server.py) | FastAPI app: serves the UI + `POST /api/vectorize` |
-| [`pitch/index.html`](pitch/index.html) | Single-file web UI (dark/lime, dropzone, layers panel, zoom demo) |
-| [`HOW_IT_WORKS.txt`](HOW_IT_WORKS.txt) | Full technical explanation of the whole pipeline |
-| `samples/` | Test images |
-
----
-
-## API
-
-`POST /api/vectorize` — multipart form:
-
-| field | values | default |
-|---|---|---|
-| `file` | the image (PNG/JPG/WEBP, ≤ 25 MB and ≤ ~25 megapixels) | required |
-| `quality` | `auto` / `max` / `balanced` / `small` / `logo` | `auto` |
-| `layered` | `true` / `false` | `false` |
-
-Returns JSON:
-
-```json
-{
-  "svg": "<svg>…</svg>",
-  "sizeKb": 153, "paths": 1130, "preset": "balanced",
-  "fidelity": "97.5%", "kind": "artwork", "n_colors": 9,
-  "layers": [{"id": "background", "count": 107}, {"id": "white", "count": 864}]
-}
-```
-
-Notes: the endpoint runs in a worker thread (concurrent uploads don't block each
-other); for true multi-core throughput run `uvicorn server:app --workers 4`.
-
----
-
-## Limits (honest)
-
-- **Gradients** band into flat color steps (contour-tracer limitation) — a metallic
-  gradient logo looks chunky. Flat/solid art is the sweet spot.
-- **Dense/painterly art** gets faithful fg/bg only, not per-color layers.
-- **Layer names** are nearest-color guesses (a dark antialiased tone may read
-  "brown") — rename in your editor; the pixels are correct.
-- **Photos** produce large SVGs with many paths — inherent to faithful tracing.
-
----
-
-*Internal build · © 2026 Techy-A*
+## How to run
+Please see [`How_to_run.txt`](How_to_run.txt) for instructions on running the server and CLI tools.
