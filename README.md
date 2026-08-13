@@ -1,6 +1,14 @@
 # OptiVector
 
 OptiVector is a fast and accurate tool that converts standard images into infinitely scalable SVGs. It features intelligent layer grouping and automatic background removal to give you perfectly crisp, print-ready graphics.
+
+## Key Features
+- **Infinite Scalability:** Export true vector paths that never pixelate, no matter how much you zoom in.
+- **Smart Layering:** Automatically groups SVGs by color for simple logos, or separates foreground from background for complex painterly artwork.
+- **Background Removal:** Seamlessly exports your vectors on a transparent background.
+- **High Performance:** Heavily optimized output (often ~45 KB) that is up to 15x smaller than competitors.
+- **Private & Local:** All processing happens locally; your images are never sent to external AI servers.
+
 ## The Problem I Was Solving
 Designers and developers frequently need to convert raster images (PNG, JPG, WEBP) into clean, infinitely-scalable SVGs for printing or web use. Existing automated tools either produce massive files, lose important details, or fail to cleanly separate colors into editable layers. Generative AI tools often "hallucinate" incorrect details instead of faithfully reproducing the original logo or artwork. This project was built to provide a fast, accurate, and faithful raster-to-vector conversion tool that outputs highly optimized, editable SVGs.
 
