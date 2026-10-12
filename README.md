@@ -1,5 +1,10 @@
 # OptiVector
 
+![Python](https://img.shields.io/badge/Python-3-3776AB?style=flat-square&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![vtracer](https://img.shields.io/badge/vtracer-2c5364?style=flat-square)
+![JavaScript](https://img.shields.io/badge/Vanilla%20JS-F7DF1E?style=flat-square&logo=javascript&logoColor=white)
+
 OptiVector is a fast and accurate tool that converts standard images into infinitely scalable SVGs. It features intelligent layer grouping and automatic background removal to give you perfectly crisp, print-ready graphics.
 
 ## Key Features
@@ -32,3 +37,7 @@ The result is a fast, production-ready application that instantly converts logos
 
 ## How to run
 Please see [`How_to_run.txt`](How_to_run.txt) for instructions on running the server and CLI tools.
+
+---
+
+<sub>Built by [Aryan Awasthi](https://github.com/Techy-A). ENC @ Thapar Institute of Engineering and Technology.</sub>
