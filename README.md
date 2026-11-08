@@ -1,9 +1,10 @@
-# OptiVector
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="OptiVector: converts PNG, JPG and WEBP images into clean, scalable SVG paths. Pixels on the left become a smooth path with anchor points on the right.">
+</p>
 
-![Python](https://img.shields.io/badge/Python-3-3776AB?style=flat-square&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
-![vtracer](https://img.shields.io/badge/vtracer-2c5364?style=flat-square)
-![JavaScript](https://img.shields.io/badge/Vanilla%20JS-F7DF1E?style=flat-square&logo=javascript&logoColor=white)
+<p align="center">
+  <a href="#how-to-run"><b>How to run</b></a> &nbsp;·&nbsp; <a href="#key-features"><b>Features</b></a>
+</p>
 
 OptiVector is a fast and accurate tool that converts standard images into infinitely scalable SVGs. It features intelligent layer grouping and automatic background removal to give you perfectly crisp, print-ready graphics.
 
